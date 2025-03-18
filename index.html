@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Lens Dashboard</title>
+    
+    <!-- Poppins Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Spline 3D Viewer -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.75/build/spline-viewer.js"></script>
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="logo-text">
+                <span>ANDROID</span>
+                <span>LENS</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-header">Home</div>
+            <div class="nav-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Home Dashboard</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-folder"></i>
+                <span>File System Browser</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-database"></i>
+                <span>Data Recovery</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-address-book"></i>
+                <span>Contact Forensics</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Location Forensics</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-globe"></i>
+                <span>Internet Forensics</span>
+            </div>
+        </div>
+
+        <div class="collapse-menu">
+            <i class="fas fa-chevron-left"></i>
+            <span>Collapse menu</span>
+        </div>
+
+        <div class="preferences">
+            <div class="nav-header">Preferences</div>
+            <div class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-question-circle"></i>
+                <span>Help Center</span>
+            </div>
+            <div class="toggle-container">
+                <div class="toggle-label">Dark Mode</div>
+                <div class="toggle"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div class="title">Dashboard</div>
+            <div class="header-actions">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search">
+                    <span class="key-shortcut">⌘F</span>
+                </div>
+                <button class="export-btn">
+                    Export JSON <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="device-card">
+                <div class="device-image-container">
+                    <!-- 3D Model Viewer -->
+                    <div class="model-container">
+                        <spline-viewer url="https://prod.spline.design/4FY8IiBepjn0ieCL/scene.splinecode"></spline-viewer>                    
+                        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.79/build/spline-viewer.js"></script>
+                    </div>
+                </div>
+                <div class="device-name">Samsung Galaxy S24 Ultra</div>
+                <div class="device-actions">
+                    <button class="device-btn reboot">Reboot</button>
+                    <button class="device-btn shutdown">Shut down</button>
+                    <button class="device-btn arrive">Arrive</button>
+                </div>
+            </div>
+
+            <div class="device-details">
+                <div class="section-title">Device Details</div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Name</div>
+                        <div class="detail-value">Advancit TV</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Make</div>
+                        <div class="detail-value">Laptop & Computer</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Model</div>
+                        <div class="detail-value">Samsung Galaxy S24 Ultra G⁹</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Root Status</div>
+                        <div class="detail-value red">False</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">IMEI</div>
+                        <div class="detail-value">354721882436351</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">MDI</div>
+                        <div class="detail-value">Apple Inc.</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Serial Number</div>
+                        <div class="detail-value">A123456789ABCDEF</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Android Version</div>
+                        <div class="detail-value">14.0.1</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Security Patch Level</div>
+                        <div class="detail-value green">Latest</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="others">
+                <div class="section-title">Others</div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Seized</div>
+                        <div class="detail-value">January 01, 2018</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Phone Number</div>
+                        <div class="detail-value">June 01, 2018</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Size</div>
+                        <div class="detail-value">16GB</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value green">Compliant</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
