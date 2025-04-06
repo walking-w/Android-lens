@@ -77,7 +77,9 @@
             </div>
             <div class="toggle-container">
                 <div class="toggle-label">Dark Mode</div>
-                <div class="toggle"></div>
+                <div class="toggle">
+                    <i class="fas"></i> <!-- Icon will be added automatically -->
+                </div>
             </div>
         </div>
     </div>
@@ -99,68 +101,70 @@
         </div>
 
         <div class="dashboard-content">
-            <div class="device-card">
-                <div class="device-image-container">
-                    <!-- 3D Model Viewer -->
-                    <div class="model-container">
-                        <spline-viewer url="https://prod.spline.design/4FY8IiBepjn0ieCL/scene.splinecode"></spline-viewer>                    
-                        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.79/build/spline-viewer.js"></script>
+            <div class="top-row">
+                <div class="device-card">
+                    <div class="device-image-container">
+                        <!-- 3D Model Viewer -->
+                        <div class="model-container">
+                            <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.81/build/spline-viewer.js"></script>
+                            <spline-viewer url="https://prod.spline.design/ejGHZnT4jDl9VxBt/scene.splinecode"></spline-viewer>
+                        </div>
+                    </div>
+                    <div class="device-name">Samsung Galaxy S24 Ultra</div>
+                    <div class="device-actions">
+                        <button class="device-btn reboot">Reboot</button>
+                        <button class="device-btn shutdown">Shut down</button>
+                        <button class="device-btn arrive">Arrive</button>
                     </div>
                 </div>
-                <div class="device-name">Samsung Galaxy S24 Ultra</div>
-                <div class="device-actions">
-                    <button class="device-btn reboot">Reboot</button>
-                    <button class="device-btn shutdown">Shut down</button>
-                    <button class="device-btn arrive">Arrive</button>
+
+                <div class="details-card">
+                    <div class="section-title">Device Details</div>
+                    <div class="details-grid" id="device-details-container">
+                        <!-- <div class="detail-item">
+                            <div class="detail-label">Name</div>
+                            <div class="detail-value">Advancit TV</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Make</div>
+                            <div class="detail-value">Laptop & Computer</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Model</div>
+                            <div class="detail-value">Samsung Galaxy S24 Ultra G⁹</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Root Status</div>
+                            <div class="detail-value red">False</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">IMEI</div>
+                            <div class="detail-value">354721882436351</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">MDI</div>
+                            <div class="detail-value">Apple Inc.</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Serial Number</div>
+                            <div class="detail-value">A123456789ABCDEF</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Android Version</div>
+                            <div class="detail-value">14.0.1</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Security Patch Level</div>
+                            <div class="detail-value green">Latest</div>
+                        </div>
+                    </div> -->
                 </div>
             </div>
 
-            <div class="device-details">
-                <div class="section-title">Device Details</div>
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <div class="detail-label">Name</div>
-                        <div class="detail-value">Advancit TV</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Make</div>
-                        <div class="detail-value">Laptop & Computer</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Model</div>
-                        <div class="detail-value">Samsung Galaxy S24 Ultra G⁹</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Root Status</div>
-                        <div class="detail-value red">False</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">IMEI</div>
-                        <div class="detail-value">354721882436351</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">MDI</div>
-                        <div class="detail-value">Apple Inc.</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Serial Number</div>
-                        <div class="detail-value">A123456789ABCDEF</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Android Version</div>
-                        <div class="detail-value">14.0.1</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Security Patch Level</div>
-                        <div class="detail-value green">Latest</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="others">
+            <div class="others-card full-width">
                 <div class="section-title">Others</div>
-                <div class="details-grid">
-                    <div class="detail-item">
+                <div class="details-grid" id="other-details-container">
+                    <!-- <div class="detail-item">
                         <div class="detail-label">Seized</div>
                         <div class="detail-value">January 01, 2018</div>
                     </div>
@@ -175,7 +179,7 @@
                     <div class="detail-item">
                         <div class="detail-label">Status</div>
                         <div class="detail-value green">Compliant</div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
