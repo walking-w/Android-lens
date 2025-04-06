@@ -15,22 +15,134 @@ const arriveBtn = document.querySelector('.device-btn.arrive');
 const exportBtn = document.querySelector('.export-btn');
 const searchInput = document.querySelector('.search-container input');
 
-// Device data object
-const deviceData = {
-    name: "Advancit TV",
-    make: "Laptop & Computer",
-    model: "Samsung Galaxy S24 Ultra G⁹",
-    rootStatus: false,
-    imei: "354721882436351",
-    mdi: "Apple Inc.",
-    serialNumber: "A123456789ABCDEF",
-    androidVersion: "14.0.1",
-    securityPatchLevel: "Latest",
-    seized: "January 01, 2018",
-    phoneNumber: "June 01, 2018",
-    size: "16GB",
-    status: "Compliant"
+// API Configuration
+const API_CONFIG = {
+    BASE_URL: 'http://your-backend-api.com',
+    ENDPOINTS: {
+        DEVICE_INFO: '/api/device/info',
+        // Add other endpoints as needed
+    },
+    HEADERS: {
+        'Content-Type': 'application/json',
+        // Add authorization headers if needed
+    }
 };
+
+// Device Data Structure with default loading state
+let deviceData = {
+    // Device Details
+    name: "Loading...",
+    manufacturer: "Loading...",
+    model: "Loading...",
+    isRooted: false,
+    imei: "Loading...",
+    mdi: "Loading...",
+    serialNumber: "Loading...",
+    androidVersion: "Loading...",
+    securityPatchLevel: "Loading...",
+    
+    // Others
+    seizedDate: "Loading...",
+    phoneNumber: "Loading...",
+    storageSize: "Loading...",
+    complianceStatus: "Loading...",
+    // Add more fields as needed
+};
+
+// Field configuration for proper display
+const fieldConfig = {
+    /* Device Details */
+    name: { label: "Device Name", section: "device", icon: "fa-mobile" },
+    manufacturer: { label: "Manufacturer", section: "device", icon: "fa-industry" },
+    model: { label: "Model", section: "device", icon: "fa-tag" },
+    isRooted: { 
+        label: "Root Status", 
+        section: "device",
+        icon: "fa-shield-alt",
+        format: (value) => value ? "Rooted" : "Not Rooted",
+        class: (value) => value ? "red" : "green"
+    },
+    imei: { label: "IMEI", section: "device", icon: "fa-barcode" },
+    serialNumber: { label: "Serial Number", section: "device", icon: "fa-hashtag" },
+    androidVersion: { label: "Android Version", section: "device", icon: "fa-android" },
+    securityPatchLevel: { 
+        label: "Security Patch", 
+        section: "device",
+        icon: "fa-lock",
+        class: (value) => isPatchCurrent(value) ? "green" : "red"
+    },
+    
+    /* Other Information */
+    seizedDate: { 
+        label: "Seized Date", 
+        section: "other",
+        icon: "fa-calendar-alt",
+        format: (value) => formatDate(value)
+    },
+    phoneNumber: { label: "Phone Number", section: "other", icon: "fa-phone" },
+    storageSize: { 
+        label: "Storage", 
+        section: "other",
+        icon: "fa-hdd",
+        format: (value) => `${value} GB`
+    },
+    complianceStatus: { 
+        label: "Compliance", 
+        section: "other",
+        icon: "fa-check-circle",
+        class: (value) => value === "Compliant" ? "green" : "red"
+    },
+    lastBackup: {
+        label: "Last Backup",
+        section: "other",
+        icon: "fa-cloud",
+        format: (value) => value ? formatDate(value) : "Never"
+    }
+};
+// Helper functions
+function formatDate(dateString) {
+    if (!dateString || dateString === "Loading...") return dateString;
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function isPatchCurrent(patchDate) {
+    if (!patchDate || patchDate === "Loading...") return false;
+    const patch = new Date(patchDate);
+    const current = new Date();
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(current.getMonth() - 6);
+    return patch >= sixMonthsAgo;
+}
+
+// API Service
+async function fetchDeviceData() {
+    try {
+        showToast('Fetching device data...', 'info');
+        
+        const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.DEVICE_INFO}`, {
+            method: 'GET',
+            headers: API_CONFIG.HEADERS
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        showToast('Device data loaded successfully', 'success');
+        return data;
+    } catch (error) {
+        console.error('Error fetching device data:', error);
+        showToast('Failed to load device data', 'error');
+        return null;
+    }
+}
+
 
 // Check if we're on a mobile device
 function isMobile() {
@@ -47,75 +159,60 @@ function initializeUI() {
 
 // Toggle dark mode & light mode
 function toggleDarkMode() {
-    function toggleDarkMode() {
-        // Create transition effect by adding class first
-        body.classList.add('theme-transition');
-        
-        // Toggle dark mode class
-        body.classList.toggle('dark-mode');
-        darkModeToggle.classList.toggle('active');
-        
-        // Update toggle state visually
-        if (body.classList.contains('dark-mode')) {
-            localStorage.setItem('theme', 'dark');
-            darkModeToggle.classList.remove('inactive');
-            darkModeToggle.classList.add('active');
-            
-            // Update toggle icon if you have one
-            const toggleIcon = darkModeToggle.querySelector('i') || document.createElement('span');
-            if (toggleIcon.classList.contains('fa-sun')) {
-                toggleIcon.classList.remove('fa-sun');
-                toggleIcon.classList.add('fa-moon');
-            }
-            
-            showToast('Dark mode enabled', 'info');
-        } else {
-            localStorage.setItem('theme', 'light');
-            darkModeToggle.classList.remove('active');
-            darkModeToggle.classList.add('inactive');
-            
-            // Update toggle icon if you have one
-            const toggleIcon = darkModeToggle.querySelector('i') || document.createElement('span');
-            if (toggleIcon.classList.contains('fa-moon')) {
-                toggleIcon.classList.remove('fa-moon');
-                toggleIcon.classList.add('fa-sun');
-            }
-            
-            showToast('Light mode enabled', 'info');
-        }
-        
-        // Remove transition class after animation completes
-        setTimeout(() => {
-            body.classList.remove('theme-transition');
-        }, 300);
-    }
+    // Add smooth transition
+    body.classList.add('theme-transition');
+    
+    // Toggle between dark and light mode classes
+    body.classList.toggle('dark-mode');
+    body.classList.toggle('light-mode');
+    
+    // Update toggle state
+    const isDarkMode = body.classList.contains('dark-mode');
+    darkModeToggle.classList.toggle('inactive', !isDarkMode);
+    darkModeToggle.classList.toggle('active', isDarkMode);
+    
+    // Update icon and localStorage
+    const toggleIcon = darkModeToggle.querySelector('i') || createToggleIcon();
+    updateToggleIcon(toggleIcon, isDarkMode);
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    
+    // Show toast notification
+    showToast(`${isDarkMode ? 'Dark' : 'Light'} mode enabled`, 'info');
+    
+    // Remove transition class after animation
+    setTimeout(() => {
+        body.classList.remove('theme-transition');
+    }, 300);
 }
-// Load dark mode preference
+
+function createToggleIcon() {
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-moon';
+    darkModeToggle.appendChild(icon);
+    return icon;
+}
+
+function updateToggleIcon(icon, isDarkMode) {
+    icon.classList.toggle('fa-moon', isDarkMode);
+    icon.classList.toggle('fa-sun', !isDarkMode);
+}
+
 function loadDarkModePreference() {
-    const savedTheme = localStorage.getItem('theme');
+    // Default to dark mode if no preference exists
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const isDarkMode = savedTheme === 'dark';
     
-    // Make sure toggle has an icon
-    let toggleIcon = darkModeToggle.querySelector('i');
-    if (!toggleIcon) {
-        toggleIcon = document.createElement('i');
-        toggleIcon.className = 'fas';
-        darkModeToggle.appendChild(toggleIcon);
-    }
+    // Set initial classes
+    body.classList.toggle('dark-mode', isDarkMode);
+    body.classList.toggle('light-mode', !isDarkMode);
     
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-mode');
-        darkModeToggle.classList.remove('inactive');
-        darkModeToggle.classList.add('active');
-        toggleIcon.classList.remove('fa-sun');
-        toggleIcon.classList.add('fa-moon');
-    } else {
-        body.classList.remove('dark-mode');
-        darkModeToggle.classList.remove('active');
-        darkModeToggle.classList.add('inactive');
-        toggleIcon.classList.remove('fa-moon');
-        toggleIcon.classList.add('fa-sun');
-    }
+    // Initialize toggle state
+    const toggleIcon = darkModeToggle.querySelector('i') || createToggleIcon();
+    darkModeToggle.classList.toggle('inactive', !isDarkMode);
+    darkModeToggle.classList.toggle('active', isDarkMode);
+    updateToggleIcon(toggleIcon, isDarkMode);
 }
+
 function setupThemeShortcut() {
     document.addEventListener('keydown', (e) => {
         // Toggle theme with Alt+T (or Option+T on Mac)
@@ -152,48 +249,47 @@ function showToast(message, type = 'info') {
 // Toggle sidebar collapse/expand with alignment fix
 function toggleSidebar(forceCollapse = false) {
     const isCollapsed = sidebar.classList.contains('sidebar-collapsed') || forceCollapse;
+    const navHeaders = document.querySelectorAll('.nav-header');
+    const allTextElements = document.querySelectorAll('.nav-item span, .logo-text span, .toggle-label, .collapse-menu span');
 
     if (!isCollapsed) {
+        // Collapse the sidebar
         sidebar.classList.remove('sidebar-expanded');
         sidebar.classList.add('sidebar-collapsed');
-        logoText.style.display = 'none';
-        navTexts.forEach(text => text.style.display = 'none');
-        toggleLabel.style.display = 'none';
-        collapseText.style.display = 'none';
-        collapseIcon.classList.remove('fa-chevron-left');
-        collapseIcon.classList.add('fa-chevron-right');
         sidebar.style.width = '60px';
         
-        // Fix for toggle button and its container
-        darkModeToggle.style.margin = '0 auto';
+        // Hide all text elements
+        allTextElements.forEach(text => text.style.display = 'none');
+        navHeaders.forEach(header => header.style.display = 'none');
+        
+        // Rotate collapse icon
+        collapseIcon.classList.remove('fa-chevron-left');
+        collapseIcon.classList.add('fa-chevron-right');
+        
+        // Center align items
+        document.querySelector('.logo').style.justifyContent = 'center';
         document.querySelector('.toggle-container').style.justifyContent = 'center';
         document.querySelector('.toggle-container').style.padding = '0';
-        
-        // Fix for logo
-        document.querySelector('.logo').style.justifyContent = 'center';
-        document.querySelector('.logo').style.padding = '0 10px';
     } else {
+        // Expand the sidebar
         sidebar.classList.remove('sidebar-collapsed');
         sidebar.classList.add('sidebar-expanded');
-        logoText.style.display = 'flex';
-        navTexts.forEach(text => text.style.display = 'inline');
-        toggleLabel.style.display = 'inline';
-        collapseText.style.display = 'inline';
+        sidebar.style.width = '220px';
+        
+        // Show all text elements
+        allTextElements.forEach(text => text.style.display = '');
+        navHeaders.forEach(header => header.style.display = '');
+        
+        // Rotate collapse icon back
         collapseIcon.classList.remove('fa-chevron-right');
         collapseIcon.classList.add('fa-chevron-left');
-        sidebar.style.width = '250px';
         
-        // Reset toggle button styling
-        darkModeToggle.style.margin = '';
+        // Reset alignments
+        document.querySelector('.logo').style.justifyContent = '';
         document.querySelector('.toggle-container').style.justifyContent = '';
         document.querySelector('.toggle-container').style.padding = '';
-        
-        // Reset logo styling
-        document.querySelector('.logo').style.justifyContent = '';
-        document.querySelector('.logo').style.padding = '';
     }
 }
-
 // Export device data as JSON
 function exportDeviceData() {
     const dataStr = JSON.stringify(deviceData, null, 2);
@@ -275,26 +371,76 @@ function handleNavigation() {
 }
 
 // Populate device info
-function populateDeviceInfo() {
-    const detailsContainer = document.querySelector('.device-details');
-    for (const [key, value] of Object.entries(deviceData)) {
-        const detailRow = document.createElement('div');
-        detailRow.className = 'detail-row';
+function populateDeviceInfo(data = null) {
+    if (data) {
+        deviceData = {
+            /* Device Details */
+            name: data.deviceName || "Unknown",
+            manufacturer: data.manufacturer || "Unknown",
+            model: data.model || "Unknown",
+            isRooted: data.rootStatus || false,
+            imei: data.imeiNumber || "Unknown",
+            serialNumber: data.serial || "Unknown",
+            androidVersion: data.androidVersion || "Unknown",
+            securityPatchLevel: data.securityPatch || "Unknown",
+            
+            /* Other Information */
+            seizedDate: data.seizedDate || new Date().toISOString(),
+            phoneNumber: data.phoneNumber || "Unknown",
+            storageSize: data.totalStorage || 0,
+            complianceStatus: data.complianceStatus || "Unknown",
+            lastBackup: data.lastBackup || null
+        };
+    }
 
+    const containers = {
+        device: document.getElementById('device-details-container'),
+        other: document.getElementById('other-details-container')
+    };
+    
+    // Clear existing content
+    Object.values(containers).forEach(container => container.innerHTML = '');
+    
+    // Create and append detail items
+    Object.entries(fieldConfig).forEach(([key, config]) => {
+        const value = deviceData[key];
+        const container = containers[config.section];
+        
+        const detailItem = document.createElement('div');
+        detailItem.className = 'detail-item';
+        
+        const icon = document.createElement('i');
+        icon.className = `fas ${config.icon || 'fa-info-circle'} detail-icon`;
+        
         const detailLabel = document.createElement('div');
         detailLabel.className = 'detail-label';
-        detailLabel.textContent = formatLabel(key);
-
+        detailLabel.textContent = config.label;
+        
         const detailValue = document.createElement('div');
         detailValue.className = 'detail-value';
-        detailValue.textContent = value;
-
-        detailRow.appendChild(detailLabel);
-        detailRow.appendChild(detailValue);
-        detailsContainer.appendChild(detailRow);
-    }
+        detailValue.textContent = config.format ? config.format(value) : value;
+        
+        if (config.class) {
+            const className = typeof config.class === 'function' 
+                ? config.class(value) 
+                : config.class;
+            detailValue.classList.add(className);
+        }
+        
+        detailItem.appendChild(icon);
+        detailItem.appendChild(detailLabel);
+        detailItem.appendChild(detailValue);
+        
+        // Copy functionality
+        detailItem.addEventListener('click', () => {
+            navigator.clipboard.writeText(detailValue.textContent)
+                .then(() => showToast(`${config.label} copied`, 'success'))
+                .catch(() => showToast('Failed to copy', 'error'));
+        });
+        
+        container.appendChild(detailItem);
+    });
 }
-
 // Format labels
 function formatLabel(key) {
     return key.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase()).trim();
@@ -323,7 +469,7 @@ function enhanceDeviceDetails() {
             const copyBtn = document.createElement('button');
             copyBtn.className = 'copy-btn';
             copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-            copyBtn.setAttribute('data-tooltip', 'Copy to clipboard');
+            // copyBtn.setAttribute('data-tooltip', 'Copy to clipboard');
             
             copyBtn.addEventListener('click', () => {
                 navigator.clipboard.writeText(detailValue.textContent)
@@ -397,11 +543,39 @@ function setupTooltips() {
     });
 }
 
-// Main initialization
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize the application
+async function initializeApp() {
     initializeUI();
+    
+    // Show loading state
     populateDeviceInfo();
-    enhanceDeviceDetails(); // Add this new function call
+    
+    // Fetch real device data from API
+    const apiData = await fetchDeviceData();
+    if (apiData) {
+        populateDeviceInfo(apiData);
+    }
+    
+    enhanceDeviceDetails();
     initEventListeners();
-    showToast('Welcome to Android Lens', 'success');
-});
+    
+    // Optional: Set up periodic refresh
+    setInterval(async () => {
+        const freshData = await fetchDeviceData();
+        if (freshData) {
+            populateDeviceInfo(freshData);
+        }
+    }, 300000); // Refresh every 5 minutes
+}
+
+// Start the application
+document.addEventListener('DOMContentLoaded', initializeApp);
+
+// // Main initialization
+// document.addEventListener('DOMContentLoaded', () => {
+//     initializeUI();
+//     populateDeviceInfo();
+//     enhanceDeviceDetails(); // Add this new function call
+//     initEventListeners();
+//     showToast('Welcome to Android Lens', 'success');
+// });
